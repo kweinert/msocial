@@ -28,7 +28,7 @@ Using the Mastodon API, it is possible to retrieve information from any server. 
 
 ```{r}
 #install.packages("remotes")
-remotes::install_github("https://github.com/kweinert/msocial")
+#remotes::install_github("https://github.com/kweinert/msocial")
 library(msocial)
 library(data.table)
 library(knitr)

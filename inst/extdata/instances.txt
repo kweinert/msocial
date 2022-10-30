@@ -54,3 +54,6 @@ https://manx.social
 https://det.social
 https://feuerwehr.social
 https://dresden.network
+https://eupolicy.social
+https://fedisabled.social
+

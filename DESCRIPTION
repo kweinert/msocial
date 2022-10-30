@@ -9,4 +9,6 @@ Depends:
     R (>= 4.0)
 Imports:
     jsonlite, knitr, rvest, httr, iptools, rgeolocate, data.table
+VignetteBuilder: knitr
+BuildVignettes : FALSE
 RoxygenNote: 7.2.1
