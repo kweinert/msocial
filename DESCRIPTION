@@ -3,5 +3,10 @@ Title: R based Mastodon client
 Description: Provides an interface to the Mastodon web API.
 Version: 0.0.1
 Author: Karsten G. Weinert <karsten.g.weinert@gmail.com>
+Maintainer: Karsten G. Weinert <karsten.g.weinert@gmail.com>
+License: GPL-3 + file LICENSE
+Depends:
+    R (>= 4.0)
 Imports:
-    jsonlite, knitr, rvest, httr, iptools, rgeolocate
+    jsonlite, knitr, rvest, httr, iptools, rgeolocate, data.table
+RoxygenNote: 7.2.1

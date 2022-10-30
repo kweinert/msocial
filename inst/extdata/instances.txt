@@ -53,3 +53,4 @@ https://social.ballpointcarrot.net
 https://manx.social
 https://det.social
 https://feuerwehr.social
+https://dresden.network

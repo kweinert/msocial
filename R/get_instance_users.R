@@ -1,3 +1,10 @@
+#' Loops the instance's user directory
+#'
+#' @param instance character, URL of the Mastodon server
+#' @param from integer (default NULL) offset. If NULL, the whole directory is parsed
+#' @param limit integer (default 40). How many profiles to fetch in one request.
+#' @return data.frame with user information
+#' @export
 get_instance_users <- function(instance, from=NULL, limit=40) {
 	
 	if(is.null(from)) {

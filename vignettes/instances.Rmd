@@ -1,0 +1,79 @@
+---
+title: "Getting acquainted with Mastodon -- Instances"
+author: "Karsten W."
+date: "2022-10-30"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{Instances}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Elon Musk has to buy Twitter after all. I took this as an opportunity to look at Mastodon at the weekend, a decentralised alternative. TL/DR: super!
+
+What I had to understand first was the concept of an "instance". My first impression is that you can compare a Mastodon server to an email server. Imagine that in order to write emails, you would have to create an account with one single company in the US and agree to their terms-of-service. Every email you send would go through that company. Not a good idea. That just seems wrong. Fortunately, emails work differently. I can create an account with a server of my choice, in Germany for example with Posteo.de, web.de or gmx.de. And I can send my messages anywhere, to any email server in the world.
+
+This decentralised approach now also works with short messages. Via Mastodon. I can choose my server, or my instance as it is now called. But my messages can be read by all Mastodon users, no matter which instance they use. I find that convincing.
+
+Which instance is the right one for me? Who offers me a Mastodon account now? 
+
+My research this weekend revealed [55 potential providers](https://github.com/kweinert/msocial/blob/main/inst/extdata/instances.txt). I collected these manually, I did not find a central overview of providers. (EDIT: As is sometimes the case, after writing this I found the link to the
+[Fediverse Observer](https://mastodon.fediverse.observer/list). There is even an API there. I'll take a closer look at that another time).
+
+Using the Mastodon API, it is possible to retrieve information from any server. This is easily done via the `msocial` package that I just uploaded to Github. It uses the new pipe operator introduced with R 4.0. The `remotes` package is needed for installation, the packages `data.table` and `knitr` are needed for this vignette. 
+
+```{r}
+#install.packages("remotes")
+remotes::install_github("https://github.com/kweinert/msocial")
+library(msocial)
+library(data.table)
+library(knitr)
+```
+
+The information is retrieved from the instances as follows.
+
+```{r}
+stats <- get_instances() |>
+lapply(get_instance_stats) |>
+rbindlist()
+stats <- stats[order(user_count, decreasing=TRUE)]
+```
+
+The code is actually only given for transparency reasons. The result is much more important: 
+
+```{r, echo=FALSE}
+knitr::kable(stats)
+```
+
+The largest instances contain "mastodon" in their address and are rather generic communities. Other names suggest a technical / open source software focus (fosstodon, linuxrocks.online, functional.cafe). There are politically oriented communities (mastodon.partipirate.org, eupublic.social). Other servers have a geographical focus (graz.social, bonn.social, berlin.social, dresden.network, norden.social, sueden.social, aus.social). 
+
+I find qoto.org interesting, which also integrates other services like Gitlab and a group concept.
+
+Some interesting communities are closed, e.g. scholar.social or chaos.social.
+
+I can't really make sense of the country codes. To find out the countries, I used the packages `iptools` and `rgeolocate`:
+
+```
+get_instance_countrycode <- function(instance) {
+	stopifnot(length(instance)==1) # not vectorized
+	ip <- iptools::hostname_to_ip(gsub("^https://", "", instance))[[1]]
+	if(length(ip)>1) ip <- ip[1]
+	if(ip=="Not resolved") return(NA)
+	fn <- system.file("extdata","GeoLite2-Country.mmdb", package = "rgeolocate")
+	rgeolocate::maxmind(ip, fn)[,"country_code"]
+}
+```	
+
+I don't really trust the results. For example, aus.social claims to be hosted in Australia.
+
+```{r}
+table(stats$country_code)
+```
+
+I decided on `berlin.social`. Then the local timeline makes sense for me. I have also already found some R users and am now following them. I have also already found two interesting toots that will occupy me in depth in the short to medium term. All in all, a good start.
+
+

@@ -1,3 +1,7 @@
+#' Return a manually curated list of Mastodon instances
+#'
+#' @return character of URLs
+#' @export
 get_instances <- function() {
 	fn <- system.file("instances.txt", package="msocial")
 	x <- readLines(fn)
