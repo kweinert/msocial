@@ -1,0 +1,64 @@
+---
+title: "Getting acquainted with Mastodon -- Instances"
+author: "Karsten W."
+date: "2022-10-30"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{Getting to know YOU on Mastodon}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Elon Musk muss jetzt doch Twitter kaufen. Ich habe das zum Anlass genommen und mir am Wochenende Mastodon angeschaut, eine dezentrale Alternative. TL/DR: super!
+
+Was ich zunächst verstehen musste, war das Konzept der Instanz. Meinem ersten Eindruck nach kann man einen Mastodon-Server vergleichen mit einem Email-Server. Stell dir vor, um Emails zu schreiben, müsste du einen Account bei einer Firma in den USA anlegen und deren Terms-of-Service zustimmen. Jede Email, die du schickst, würde über diese Firma gehen. Keine schöne Vorstellung. Zum Glück funktionieren Emails anders. Ich kann einen Account bei einem Server meiner Wahl anlegen, in Deutschland z.B. bei Posteo.de, web.de oder gmx.de. Und ich kann meine Nachrichten überall hinschicken, zu jedem Email-Server der Welt.
+
+Das funktioniert jetzt auch mit Kurznachrichten. Über Mastodon. Ich kann meinen Server, oder meine Instanz, wie es jetzt heißt, wählen. Meine Nachrichten können aber von allen Nutzern von Mastodon mitverfolgt werden. Das macht für mich viel mehr Sinn.
+
+## Welche Instanz?
+
+Wer bietet mir nun einen Mastodon-Account an? 
+
+First, create an account on an Mastodon server of your choice. Then, provide
+your login credentials to R. You might consider putting it into your .Rprofile. 
+
+```{r}
+#options(
+#	msocial.instance="https://berlin.social/",
+#	msocial.email="me@email.com",
+#	msocial.passw="secret"
+#)
+```
+
+Next, load the need libraries.
+
+```{r}
+library(msocial)
+library(mastodon) # devtools::install_github('ThomasChln/mastodon')
+token <- login(
+	getOption("msocial.instance"),
+	getOption("msocial.email"), 
+	getOption("msocial.passw")
+)
+```
+
+Now we are ready to use the API and find some posts that use the #rstats tag. We are interested in their instances only. We can fetch some information on the instances:
+
+```{r}
+dat <- get_hashtag(token, 'rstats', local = FALSE, n=10000)
+users <- c(users, sapply(dat$account, function(x) x$acct))
+instances <- unique(gsub("^.*@", "https://", users))
+stats <- do.call(rbind, lapply(instances, get_instance_stats))
+head(stats)
+```
+
+Also, we can fetch public user profile data from each instance:
+
+```{r}
+get_instance_users(instances[1])
+```
+

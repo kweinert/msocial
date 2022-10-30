@@ -1,0 +1,7 @@
+Package: msocial
+Title: R based Mastodon client
+Description: Provides an interface to the Mastodon web API.
+Version: 0.0.1
+Author: Karsten G. Weinert <karsten.g.weinert@gmail.com>
+Imports:
+    jsonlite, knitr, rvest, httr, iptools, rgeolocate
